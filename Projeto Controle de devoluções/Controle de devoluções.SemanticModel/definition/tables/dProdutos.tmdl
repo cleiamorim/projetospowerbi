@@ -1,0 +1,71 @@
+table dProdutos
+	lineageTag: 819a30c1-53c9-4a59-98d7-61973f3d0bef
+
+	column SKU
+		dataType: string
+		lineageTag: 9d5cdc35-e6e9-45d6-9ed2-c2127b2bb82a
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto
+		dataType: string
+		lineageTag: 3668f343-aaa6-440f-90bc-83a3663d1f2a
+		summarizeBy: none
+		sourceColumn: Produto
+
+		annotation SummarizationSetBy = Automatic
+
+	column Marca
+		dataType: string
+		lineageTag: 105f3d94-f686-43f9-af83-f677a89d161d
+		summarizeBy: none
+		sourceColumn: Marca
+
+		annotation SummarizationSetBy = Automatic
+
+	column Categoria
+		dataType: string
+		lineageTag: 23ebf271-ad61-4cee-8678-f6c9326d2843
+		summarizeBy: none
+		sourceColumn: Categoria
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Preço Unitario'
+		dataType: decimal
+		formatString: 0
+		lineageTag: 144e5960-8d0a-478f-86e8-251529ff7477
+		summarizeBy: sum
+		sourceColumn: Preço Unitario
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Custo Unitario'
+		dataType: decimal
+		formatString: 0
+		lineageTag: 2820a1dc-4708-4bf1-a973-4039e8ebc41b
+		summarizeBy: sum
+		sourceColumn: Custo Unitario
+
+		annotation SummarizationSetBy = Automatic
+
+	partition dProdutos = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\cvamo\OneDrive - Clei Amorim TECnologia\Escolas\CATEC\Turmas\Arcelormittal\Turma 03 - Acerlomittal - Power BI\bd_basico\Cadastro Produtos.xlsx"), null, true),
+				    Plan1_Sheet = Fonte{[Item="Plan1",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Plan1_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"SKU", type text}, {"Produto", type text}, {"Marca", type text}, {"Categoria", type text}, {"Preço Unitario", Currency.Type}, {"Custo Unitario", Currency.Type}, {"Observação", type text}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado",{"Observação"}),
+				    #"Coluna dividida" = Table.TransformColumns(#"Colunas Removidas", {{"Preço Unitario", each _ / 100, Currency.Type}}),
+				    #"Coluna dividida1" = Table.TransformColumns(#"Coluna dividida", {{"Custo Unitario", each _ / 100, Currency.Type}})
+				in
+				    #"Coluna dividida1"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

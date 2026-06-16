@@ -1,0 +1,117 @@
+table fVendas
+	lineageTag: 6432d020-c395-419f-8217-8fc8912cbb2f
+
+	column 'Data da Venda'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 24e5f50d-7ab6-4a26-95e7-c403b2491eba
+		summarizeBy: none
+		sourceColumn: Data da Venda
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Ordem de Compra'
+		dataType: string
+		lineageTag: 58dd6531-7e17-4996-bc6a-0f39ed8d7be5
+		summarizeBy: none
+		sourceColumn: Ordem de Compra
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: 7a1ed2aa-67f8-4562-a24e-4f5abd149465
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ID Cliente'
+		dataType: string
+		lineageTag: 5db976b7-6b60-4d30-b9f6-24785303f0f1
+		summarizeBy: none
+		sourceColumn: ID Cliente
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Qtd Vendida'
+		dataType: int64
+		formatString: 0
+		lineageTag: 12835e64-fe04-45c2-a034-a1a3c59b4092
+		summarizeBy: sum
+		sourceColumn: Qtd Vendida
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'ID Vendedor'
+		dataType: string
+		lineageTag: 9bd7cbbf-cbaf-48fc-8e71-e6bd4c141804
+		summarizeBy: none
+		sourceColumn: ID Vendedor
+
+		annotation SummarizationSetBy = Automatic
+
+	column Produto = RELATED(dProdutos[Produto])
+		lineageTag: 64a1a94f-3274-4c18-bb4a-e26543b04a5d
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Preço unit' = RELATED(dProdutos[Preço Unitario])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 96da4ce2-65c7-4f1d-90ed-62cef68db9e6
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Preço venda' = fVendas[Preço unit] * fVendas[Qtd Vendida]
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 0e79cdd3-4575-466b-912e-b9004e4bb563
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Custo unit' = RELATED(dProdutos[Custo Unitario])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 71c27588-b510-4698-a812-cf1a90cfaa92
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	column 'Custo venda' = fVendas[Custo unit] * fVendas[Qtd Vendida]
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 11937e92-8680-4c73-898d-62d0c679449f
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	partition fVendas = m
+		mode: import
+		source =
+				let
+				    Fonte = Folder.Files("C:\Users\cvamo\OneDrive - Clei Amorim TECnologia\Escolas\CATEC\Turmas\Arcelormittal\Turma 03 - Acerlomittal - Power BI\bd_basico\Vendas"),
+				    #"Arquivos Ocultos Filtrados1" = Table.SelectRows(Fonte, each [Attributes]?[Hidden]? <> true),
+				    #"Invocar Função Personalizada1" = Table.AddColumn(#"Arquivos Ocultos Filtrados1", "Transformar Arquivo", each #"Transformar Arquivo"([Content])),
+				    #"Colunas Renomeadas1" = Table.RenameColumns(#"Invocar Função Personalizada1", {"Name", "Nome da Origem"}),
+				    #"Outras Colunas Removidas1" = Table.SelectColumns(#"Colunas Renomeadas1", {"Nome da Origem", "Transformar Arquivo"}),
+				    #"Coluna de Tabela Expandida1" = Table.ExpandTableColumn(#"Outras Colunas Removidas1", "Transformar Arquivo", Table.ColumnNames(#"Transformar Arquivo"(#"Arquivo de Amostra"))),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Coluna de Tabela Expandida1",{{"Nome da Origem", type text}, {"Data da Venda", type date}, {"Ordem de Compra", type text}, {"SKU", type text}, {"ID Cliente", Int64.Type}, {"Qtd Vendida", Int64.Type}, {"ID Vendedor", Int64.Type}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado",{"Nome da Origem"}),
+				    #"Tipo Alterado1" = Table.TransformColumnTypes(#"Colunas Removidas",{{"ID Cliente", type text}, {"ID Vendedor", type text}})
+				in
+				    #"Tipo Alterado1"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,113 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 252,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 0
+          },
+          "nodeIndex": "dClientes",
+          "nodeLineageTag": "b5c00b83-78d4-4cfe-86e3-6276d046eef8",
+          "size": {
+            "height": 336.73218844774817,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 271.10211911100782,
+            "y": 331.42628799628329
+          },
+          "nodeIndex": "fDevoluções",
+          "nodeLineageTag": "d66efe22-5960-4a3b-824a-5c3af5ec4d03",
+          "size": {
+            "height": 257.39404444960655,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 710.44656534324452,
+            "y": 0
+          },
+          "nodeIndex": "dProdutos",
+          "nodeLineageTag": "819a30c1-53c9-4a59-98d7-61973f3d0bef",
+          "size": {
+            "height": 225.04238222015738,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 679.16861511751222,
+            "y": 324.55297777519672
+          },
+          "nodeIndex": "fVendas",
+          "nodeLineageTag": "6432d020-c395-419f-8217-8fc8912cbb2f",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 1035.9697653664739,
+            "y": 0
+          },
+          "nodeIndex": "dVendedores",
+          "nodeLineageTag": "5c647db5-142c-4eb6-b329-b5bff58dfa18",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 1373.0015520315919,
+            "y": 0
+          },
+          "nodeIndex": "medidas",
+          "nodeLineageTag": "d896d69d-9b2b-4121-9f65-5b42fb82d354",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 375.28540721167337,
+            "y": 0
+          },
+          "nodeIndex": "dCalendario",
+          "nodeLineageTag": "7c687567-a058-404b-b40f-3c26ce869f9f",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Todas as tabelas",
+      "zoomValue": 50,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Todas as tabelas",
+  "defaultDiagram": "Todas as tabelas"
+}

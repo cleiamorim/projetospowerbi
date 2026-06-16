@@ -1,0 +1,62 @@
+table fDevoluções
+	lineageTag: d66efe22-5960-4a3b-824a-5c3af5ec4d03
+
+	column 'Data Devolução'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: cea67404-4798-4aa5-b35f-9b27f0842c4c
+		summarizeBy: none
+		sourceColumn: Data Devolução
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'ID Loja'
+		dataType: string
+		lineageTag: 7256d9c9-e798-4e03-b07c-62129ab7011e
+		summarizeBy: none
+		sourceColumn: ID Loja
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: 13005866-e43b-4f7c-a394-cda6d83bcefd
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Qtd Devolvida'
+		dataType: int64
+		formatString: 0
+		lineageTag: bb991072-7f76-4319-acf7-64f3c1e44f34
+		summarizeBy: sum
+		sourceColumn: Qtd Devolvida
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Motivo Devolução'
+		dataType: string
+		lineageTag: 122f2c42-ba8e-442a-a3ad-0f193224fa76
+		summarizeBy: none
+		sourceColumn: Motivo Devolução
+
+		annotation SummarizationSetBy = Automatic
+
+	partition fDevoluções = m
+		mode: import
+		source =
+				let
+				    Fonte = Excel.Workbook(File.Contents("C:\Users\cvamo\OneDrive - Clei Amorim TECnologia\Escolas\CATEC\Turmas\Arcelormittal\Turma 03 - Acerlomittal - Power BI\bd_basico\Base Devoluções.xlsx"), null, true),
+				    Plan1_Sheet = Fonte{[Item="Plan1",Kind="Sheet"]}[Data],
+				    #"Cabeçalhos Promovidos" = Table.PromoteHeaders(Plan1_Sheet, [PromoteAllScalars=true]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(#"Cabeçalhos Promovidos",{{"Data Devolução", type date}, {"ID Loja", type text}, {"SKU", type text}, {"Qtd Devolvida", Int64.Type}, {"Motivo Devolução", type text}})
+				in
+				    #"Tipo Alterado"
+
+	annotation PBI_NavigationStepName = Navegação
+
+	annotation PBI_ResultType = Table
+

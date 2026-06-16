@@ -1,0 +1,219 @@
+table medidas
+	lineageTag: d896d69d-9b2b-4121-9f65-5b42fb82d354
+
+	measure 'Custo total' = SUM(fVendas[Custo venda])
+		formatString: "R$"\ #,0.0;-"R$"\ #,0.0;"R$"\ #,0.0
+		lineageTag: f03a42d9-8fdb-4dfe-a4f9-e93b5fa0cd8e
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure Faturamento = SUM(fVendas[Preço venda])
+		formatString: #,0.0
+		lineageTag: 18b923fb-320a-4088-98db-00b363d32e7d
+
+	measure 'Lucro liquido' = [Faturamento] - [Custo total]
+		formatString: "R$"\ #,0.0;-"R$"\ #,0.0;"R$"\ #,0.0
+		lineageTag: 6a9b8644-14f9-43f9-93ee-e341da564a52
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'ticket medio' = AVERAGE(fVendas[Preço venda])
+		formatString: "R$"\ #,0.00;-"R$"\ #,0.00;"R$"\ #,0.00
+		lineageTag: 385ee5d6-481e-47be-af76-1762ad700c4f
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure clientes_cadastrados = COUNTROWS(dClientes)
+		formatString: 0.000
+		lineageTag: bf734db3-c6d7-4663-9df7-51951a6c2d13
+
+	measure Clientes_ativo = DISTINCTCOUNT(fVendas[ID Cliente])
+		formatString: 0.000
+		lineageTag: 14427705-a910-4c32-bc43-a4d405180b57
+
+	measure CustoCelular = CALCULATE([Custo total],dProdutos[Categoria] = "Celular")
+		formatString: #,0.000
+		lineageTag: 75ebb9a2-c26d-4ba2-a486-a8f792a31ae1
+
+	measure QTD_celular_Vendido =
+			
+			CALCULATE(
+			    COUNT(fVendas[SKU]),
+			    dProdutos[Categoria] = "Celular")
+		formatString: 0
+		lineageTag: 1463e0d8-e45d-4d5f-bb17-fa36667a80e4
+
+	measure vendas_Samsung =
+			CALCULATE(
+			    [Faturamento],
+			    dProdutos[Marca] = "Samsung"
+			)
+		formatString: #,0.000
+		lineageTag: 81d6d929-d39d-4767-9ff6-5fbfd96dc263
+
+	measure Vendas_Apple =
+			CALCULATE(
+			    [Faturamento],
+			    dProdutos[Marca] = "Apple"
+			)
+		formatString: "R$"\ #,0.000;-"R$"\ #,0.000;"R$"\ #,0.000
+		lineageTag: 01055fab-2571-4792-84b0-d0bd469b6574
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Margem de lucro' = [Lucro liquido] / [Faturamento]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 8632239a-1dc6-406d-be0c-dc6249838d22
+
+	measure 'TOTAL VENDAS' = COUNTROWS(fVendas)
+		formatString: 0
+		lineageTag: 7e624e2b-fac2-48c0-ae6e-36eb475af642
+
+	measure 'prejuizo total' = SUMX('fDevoluções', RELATED(dProdutos[Preço Unitario])*'fDevoluções'[Qtd Devolvida])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 2d6758fa-5440-4fa1-893b-da303e93e26a
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% projuizo' = [prejuizo total] / [Faturamento]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6051d154-27fe-4e13-947c-50778168e28c
+
+	measure 'Acumulado 15 dias' =
+			
+			CALCULATE(
+			    [Faturamento],
+			DATESINPERIOD(
+			    dCalendario[Data],
+			    MAX(dCalendario[Data]),-15,DAY
+			    )
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 40f5eef8-392f-4f8c-bb2a-6475dc904f38
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Faturamento YTD' = CALCULATE([Faturamento],DATESYTD(dCalendario[Data]))
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: a8cc384d-b48c-44f8-8f13-d5ab29f5830b
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Faturamento LM' = ```
+			
+			
+			VAR valorLM = 
+			CALCULATE([Faturamento], DATEADD(dCalendario[Data],-1,MONTH))
+			
+			RETURN
+			IF(ISBLANK(valorLM),0, valorLM)
+			```
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: b464999e-c153-4e69-8fb0-fd79b657c535
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure Crescimento = DIVIDE([Faturamento] - [Faturamento LM],[Faturamento LM],0)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 61c7ee0a-1b87-4637-9f4f-441821e7a8ba
+
+	measure 'acumulado trimestre' = CALCULATE([Faturamento],DATESINPERIOD(dCalendario[Data],MAX(dCalendario[Data]),-1,QUARTER))
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 55821104-c81b-42c4-988c-fac7815f0cd5
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Faturamento YTD 2' = ```
+			
+			
+			    CALCULATE([Faturamento],DATESYTD(dCalendario[Data]))
+			```
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: d8c4ecb7-804a-4066-9e39-c290d9ea963c
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Faturamento YTD 3' = TOTALYTD([Faturamento],dCalendario[Data])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: a3d5b251-4255-4d3f-bbcf-e127aa32d1d7
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Faturamento LM 1' =
+			
+			
+			VAR ResultadoLM = CALCULATE([Faturamento],DATEADD(dCalendario[Data],-1,MONTH))
+			
+			RETURN
+			IF(ISBLANK(ResultadoLM),"Sem referencia", ResultadoLM)
+		lineageTag: 346556aa-9cbd-45f8-9510-5caf1e908c24
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure '% Crescimento' = DIVIDE([Faturamento]- [Faturamento LM], [Faturamento LM],"NA")
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: fa155ec3-7157-4a98-bc26-9f473ccb41ec
+
+	measure 'Valor Total Devolvido' = ```
+			SUMX(
+			    
+			    'fDevoluções'                           //tabela de referencia
+			    ,RELATED(dProdutos[Preço Unitario])     //buscar o preço na tabela dprodutos
+			    *                                       //operação para descobrir o preço TOTAL da venda.
+			    'fDevoluções'[Qtd Devolvida]            // quantidade do produto devolvido
+			)
+			```
+		formatString: "R$"\ #,0;-"R$"\ #,0;"R$"\ #,0
+		lineageTag: 4dec2c0c-7893-4a6f-a683-181b838a28ab
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Devoluções YTD' =
+			CALCULATE(
+			    [Valor Total Devolvido],
+			    DATESYTD(dCalendario[Data])
+			)
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: dc85fa32-7bdd-4926-a970-041ce066f3fa
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'devolucoes MTD' = TOTALMTD([Valor Total Devolvido],dCalendario[Data])
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 3e46eed7-4b83-48be-8a0e-8c47371f5be2
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure 'Devoluções LM' = CALCULATE([Valor Total Devolvido],DATEADD(dCalendario[Data],-1,MONTH))
+		formatString: "R$"\ #,0.###############;-"R$"\ #,0.###############;"R$"\ #,0.###############
+		lineageTag: 7dca9a5c-83ee-49f4-99de-62ddca5a41fd
+
+		annotation PBI_FormatHint = {"currencyCulture":"pt-BR"}
+
+	measure '% Var MoM' = ```
+			
+			    DIVIDE([Valor Total Devolvido] - [Devoluções LM],[Devoluções LM],"0%")
+			```
+		formatString: 0%;-0%;0%
+		lineageTag: 567e5603-b191-4ec0-bc5c-88e2132ec2fd
+
+	measure '% MoM TOTAL' = AVERAGEX('fDevoluções',[% Var MoM])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: bb2f45e0-ecb8-4c73-ad6f-87861175be04
+
+	measure '% Devoluções' = [Valor Total Devolvido] / [Faturamento]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4a199b52-7800-43dd-b0c8-2b36b34cfbc2
+
+	partition medidas = m
+		mode: import
+		source =
+				let
+				    Fonte = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [#"Coluna 1" = _t]),
+				    #"Tipo Alterado" = Table.TransformColumnTypes(Fonte,{{"Coluna 1", type text}}),
+				    #"Colunas Removidas" = Table.RemoveColumns(#"Tipo Alterado",{"Coluna 1"})
+				in
+				    #"Colunas Removidas"
+
+	annotation PBI_ResultType = Table
+
