@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Página Análises Sem Painel de Filtro",
+  "name": "Bookmarkc830a03b6229be28adb3",
+  "options": {
+    "targetVisualNames": [],
+    "suppressData": true
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "ReportSectione06ec37ec122eb0f9922",
+    "sections": {
+      "ReportSectione06ec37ec122eb0f9922": {
+        "visualContainers": {},
+        "visualContainerGroups": {
+          "6f7d70c355ee2e374bc4": {
+            "isHidden": true
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}
