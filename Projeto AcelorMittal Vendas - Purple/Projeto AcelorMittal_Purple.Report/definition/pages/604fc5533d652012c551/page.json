@@ -1,0 +1,72 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "604fc5533d652012c551",
+  "displayName": "VENDAS",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Slide2.PNG'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "Slide26728996150753104.PNG"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "a091e6278bb0264ca099",
+      "target": "7b17c598c6074e0213c2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "a091e6278bb0264ca099",
+      "target": "c4d288cd34251650d63a",
+      "type": "NoFilter"
+    },
+    {
+      "source": "5cc8b0b66ae3bb420c20",
+      "target": "7bd6ae5d368d968112e0",
+      "type": "DataFilter"
+    },
+    {
+      "source": "5cc8b0b66ae3bb420c20",
+      "target": "a091e6278bb0264ca099",
+      "type": "DataFilter"
+    }
+  ]
+}
