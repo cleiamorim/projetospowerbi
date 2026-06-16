@@ -1,0 +1,17 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "645324b700920573052a",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 17000,
+    "height": 720,
+    "width": 1263.5761589403974,
+    "tabOrder": 17000
+  },
+  "visualGroup": {
+    "displayName": "Painel Explicativo",
+    "groupMode": "ScaleMode"
+  },
+  "isHidden": true
+}
